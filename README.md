@@ -1,4 +1,4 @@
 answer
 ===
 
-A tiny, fast, flexible Promises/A+ implementation.
+A fast, elegant, flexible Promises/A+ implementation.
