@@ -1,4 +1,4 @@
-ans
+answer
 ===
 
-A tiny, fast Promises/A+ implementation.
+A tiny, fast, flexible Promises/A+ implementation.
