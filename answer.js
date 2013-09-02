@@ -83,15 +83,22 @@
         }
 
 
-        function defer() {
-            var deferred, pending, resolved;
+        function defer(canceler) {
+            var deferred, pending, resolved, cancel;
 
             deferred = {
                 promise: undef, resolve: undef, reject: undef, notify: undef,
                 resolver: { resolve: undef, reject: undef, notify: undef }
             };
 
-            deferred.promise = pending = promise(makeDeferred);
+            if (canceler) {
+                cancel = function (reason) {
+                    deferred.reject(canceler(reason));
+                };
+                deferred.cancel = cancel;
+            }
+
+            deferred.promise = pending = makePromise(makeDeferred, cancel);
 
             return deferred;
 
@@ -119,15 +126,19 @@
                     return update;
                 };
             }
-
         }
 
         function promise(resolver) {
+            return makePromise(resolver);
+        }
+
+        function makePromise(resolver, cancel) {
             var self, consumers = [],  method, value;
 
             self = new Promise();
             self.then = then;
             self.done = self.end = done;
+            if (typeof cancel === 'function') self.cancel = cancel;
 
             resolver(promiseResolve, promiseReject, promiseNotify);
 
@@ -159,9 +170,9 @@
             function then(onFulfilled, onRejected, onProgress) {
                 /*jshint unused:false*/
                 var args = arguments;
-                return promise(function (resolve, reject, notify) {
+                return makePromise(function (resolve, reject, notify) {
                     schedule(args, [resolve, reject, notify]);
-                });
+                }, cancel);
             }
 
             /**
