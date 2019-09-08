@@ -22,7 +22,7 @@
     "url": "https://github.com/taoyuan/answer/issues"
   },
   "devDependencies": {
-    "chai": "~1.7.2",
-    "mocha": "~1.12.1"
+    "chai": "~4.2.0",
+    "mocha": "~6.2.0"
   }
 }
